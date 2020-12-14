@@ -1,7 +1,7 @@
 #include <Stepper.h>
 
-#define STEPS_REV 64
-#define RPM 10
+#define STEPS_REV 2038 // 64 steps per rev at ~63.8 gearbox reduction
+#define RPM 5
 #define LN1 8
 #define LN2 9
 #define LN3 10
@@ -19,7 +19,7 @@ void setup() {
   Serial.print("Beginning stepper test. ");
   Serial.print(STEPS_REV);
   Serial.print(" steps per revolution.\n");
-  stepper.setSpeed(10);
+  stepper.setSpeed(RPM);
 }
 
 void loop() {
