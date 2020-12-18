@@ -1,67 +1,85 @@
 #include <Stepper.h>
 
 // Sensor pins
-#define LW A0 // left wing
+#define LW A0 // left wing, currently unused
 #define LC A1 // left center
 #define RC A2 // right center
-#define RW A3 // right wing
+#define RW A3 // right wing, currently unused
 
 // Sensor values TODO tune
 #define READING_LINE 100
 #define READING_OFFLINE 0
 
 // Motor pins
-#define LLN1 4
-#define LLN2 5
-#define LLN3 6
-#define LLN4 7
+#define RLN1 4
+#define RLN2 5
+#define RLN3 6
+#define RLN4 7
 
-#define RLN1 8
-#define RLN2 9
-#define RLN3 10
-#define RLN4 11
+#define LLN1 9
+#define LLN2 10
+#define LLN3 11
+#define LLN4 12
 
-#define STEPS_REV 64
+#define STEPS_REV 2038
+#define RPM 5
 
-Stepper leftSide(STEPS_REV, LLN1, LLN2, LLN3, LLN4);
-Stepper rightSide(STEPS_REV, RLN1, RLN2, RLN3, RLN4);
+const unsigned msBetweenSteps = (unsigned)(60000/(RPM*STEPS_REV));
+
+int stateL = 0;
+int stateR = 0;
+
+int leftPins[4] = {LLN1,LLN2,LLN3,LLN4};
+int rightPins[4] = {RLN1,RLN2,RLN3,RLN4};
+//Stepper leftSide(STEPS_REV, LLN1, LLN2, LLN3, LLN4);
+//Stepper rightSide(STEPS_REV, RLN1, RLN2, RLN3, RLN4);
 
 void setup() {
-  // put your setup code here, to run once:
-  leftSide.setSpeed(30);
-  rightSide.setSpeed(30);
+  for(int i = 0; i < 4; i++){
+    pinMode(leftPins[i], OUTPUT);
+    pinMode(rightPins[i], OUTPUT);
+  }
+  pinMode(LW, INPUT);
+  pinMode(LC, INPUT);
+  pinMode(RC, INPUT);
+  pinMode(RW, INPUT);
 }
 
 void loop() {
-  // simple bang-bang line following
-  if(checkSensor(RC) > checkSensor(LC)){
-    // right sensor more on line than left sensor, move left side toward line
-    leftSide.step(1);
-  }else{
-    // right sensor not more on line, move right side toward line
-    rightSide.step(1);
+  bool readRight = sensorOnLine(RC);
+  bool readLeft = sensorOnLine(LC);
+  if(readLeft && !readRight){
+    stepLeft(); // left-right mismatch intentional
   }
-
+  else if(readRight && !readLeft){
+    stepRight();
+  }
+  else if(readRight && readLeft){
+    stepLeft();
+    stepRight();  
+  }
+  delay(msBetweenSteps);
 }
 
-
 /**
-   Return sensor value on a [0.0, 1.0] range, where 0.0 means a reading off of the line and 1.0 means full on the line.
-*/
-float checkSensor(int pin) {
-  return clamp(0, (float)(analogRead(pin) - READING_OFFLINE) / (READING_LINE - READING_OFFLINE), 1);
+ * True value means sensor on line.
+ */
+bool sensorOnLine(int pin) {
+  return (analogRead(pin) > 500);
 }
 
+void stepLeft(){
+  for(int i = 0; i <4; i++){
+    digitalWrite(leftPins[i], LOW);
+  }
+  digitalWrite(leftPins[stateL], HIGH);
+  stateL = (stateL+1)%4;
+}
 
-// General math helper functions
-
-/**
-   Binds a value into a [lowerbound, upperbound] range.
-   If the value is lower than the lower bound, return lower bound; likewise for upper.
-   @param lower - lower bound
-   @param val - value to place in range
-   @param upper - upper bound
-*/
-float clamp(float lower, float val, float upper) {
-  return max(lower, min( upper, val));
+void stepRight(){
+  for(int i = 0; i <4; i++){
+    digitalWrite(rightPins[i], LOW);
+  }
+  digitalWrite(rightPins[3-stateR], HIGH);
+  stateR = (stateR+1)%4;
 }
