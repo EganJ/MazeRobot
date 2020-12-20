@@ -68,7 +68,7 @@ void loop() {
    True value means sensor on line.
 */
 bool sensorOnLine(int pin) {
-  return (analogRead(pin) > 500);
+  return (analogRead(pin) < 500);
 }
 
 void stepLeft() {
