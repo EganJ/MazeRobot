@@ -12,7 +12,7 @@ const unsigned msBetweenSteps = (unsigned)(60000 / (RPM*STEPS_REV));
 const int leftPins[4] = {4, 5, 6, 7};
 const int rightPins[4] = {12, 11, 10, 9};
 
-const float wheelCircCM = 18.85;
+const float wheelCircCM = 3.1415*7.5;
 const float tapeWidthCM = 2.35;
 const float trackWidthCM = 10;
 const float sensorForwardThrowCM = 3; // how far forward from the center of rotation the sensor are

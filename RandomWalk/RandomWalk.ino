@@ -1,5 +1,5 @@
 /* Randomly walk through a maze with the following assumptions:
-    - the maze is set up with only vertical and horizontal lines
+    - all intersections are right angles
     - the only time a line terminates is the exit
 */
 
@@ -67,8 +67,8 @@ Direction investigateIntersection() {
 
   static const int stepsPerIntersection = (int)(cmToSteps(tapeWidthCM + sensorForwardThrowCM)); // add sensor throw so center of rotation is directly on intersection
   for (int i = 0; i < stepsPerIntersection; i++) {
-  // check wings for presence of turns
-  if ((!isRight) && sensorOnLine(RW)) {
+    // check wings for presence of turns
+    if ((!isRight) && sensorOnLine(RW)) {
       isRight = true;
     }
     if ((!isLeft) && sensorOnLine(LW)) {
@@ -81,17 +81,22 @@ Direction investigateIntersection() {
 
   isStraight = sensorOnLine(RC) || sensorOnLine(LC);
 
-               // todo: randomize walk
+  // randomly select
+  Direction options[3];
+  int nOpts = 0;
   if (isStraight) {
-  return straight;
-} else if (isRight) {
-  return right;
-} else if (isLeft) {
-  return left;
-}
-
-// default to straight
-return straight;
+    options[nOpts] = straight;
+    nOpts++;
+  }
+  if (isRight) {
+    options[nOpts] = right;
+    nOpts++;
+  }
+  if (isLeft) {
+    options[nOpts] = left;
+    nOpts++;
+  }
+  return options[random(0, nOpts)];
 }
 
 // Turn 90 degrees in place
@@ -100,10 +105,10 @@ void turnInPlace(Direction dir) {
   // circle with diameter of the track width. For different directions change +/- steps
   static const int stepsPerWheel = (int)(cmToSteps(PI * trackWidthCM / 4));
   for (int i = 0; i < stepsPerWheel; i++) {
-    if(dir == left){
+    if (dir == left) {
       stepRight();
       stepBackLeft();
-    }else{
+    } else {
       stepLeft();
       stepBackRight();
     }
