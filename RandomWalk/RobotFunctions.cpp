@@ -4,8 +4,19 @@
 unsigned stateL = 0;
 unsigned stateR = 0;
 
+void setupRobot(){
+  for (int i = 0; i < 4; i++) {
+    pinMode(leftPins[i], OUTPUT);
+    pinMode(rightPins[i], OUTPUT);
+  }
+  pinMode(LW, INPUT);
+  pinMode(LC, INPUT);
+  pinMode(RC, INPUT);
+  pinMode(RW, INPUT);
+}
+
 bool sensorOnLine(int pin) {
-  return (analogRead(pin) < 500);
+  return (analogRead(pin) > 500);
 }
 
 void stepLeft() {
@@ -38,4 +49,8 @@ void stepBackRight() {
     digitalWrite(rightPins[i], LOW);
   }
   digitalWrite(rightPins[stateR], HIGH);
+}
+
+float cmToSteps(float cm){
+  return cm*STEPS_REV/wheelCircCM;
 }
