@@ -1,3 +1,15 @@
+/* Main file for the maze solving robot.
+
+Combines the robot functionality with the abstracted version
+of the maze to create a fully-fledged maze exploring robot.
+
+Operates on a maze built on a grid with regular distances
+between intersections on the grid. Not every intersection on
+the grid need be an intersection in the maze, but long 
+straightaways could potentially throw off robot odometry.
+
+*/
+
 #include "RobotFunctions.h"
 #include "maze.h"
 
@@ -18,6 +30,7 @@ void setup() {
     delay(10);
   }
   for(int i =0; i<16;i++){
+    // test output characters
     Serial.print(symbolCodes[i]);
   }
 }

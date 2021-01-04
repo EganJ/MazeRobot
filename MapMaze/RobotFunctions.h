@@ -1,3 +1,8 @@
+/**
+ * Functions for interfacing with robot hardware,
+ * along with physical robot information.
+ */
+
 #pragma once
 
 // Sensor pins
@@ -21,11 +26,11 @@ const float sensorForwardThrowCM = 3; // how far forward from the center of rota
 
 void setupRobot();
 
-/**
-   True value means sensor on line.
-*/
 bool sensorOnLine(int pin);
 
+/**
+ * Move left or right stepper a single step 
+ */
 void stepLeft();
 
 void stepRight();
@@ -34,7 +39,14 @@ void stepBackLeft();
 
 void stepBackRight();
 
+/**
+* Based on sensor input, step left or right motors accordingly
+*/
 void followLineSingleStep();
+
+/**
+ * Follow a line until an intersection is hit
+ */
 void followLine();
 
 void turn90Right();
