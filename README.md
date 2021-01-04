@@ -31,8 +31,8 @@ The maze is outputted to serial using line characters in the extended ascii rang
 
 A incompletely explored maze and its completely explored end result:
 
-![Incomplete](maze_incomplete.jpg)
-![Complete](maze_complete.jpg)
+![Incomplete](maze_incomplete.JPG)
+![Complete](maze_complete.JPG)
 
 ## Code limitations
 The multiple occurrences of blind traveling (turning, moving past intersection) can cause issues with robot performance. In addition, the type of maze it can perform is limited: using an array to represent the maze limits it to a grid like behavior, as you can see in the maze photos above. I have no plans on fixing either of these issues, partly because the issues with the blind travel can be fixed by increasing the length of the feedback travel part and doing output for a non-grid like maze is a pain.
